@@ -9,12 +9,12 @@ const authRouter = require('./app/routes/auth')
 const app = express()
 app.use(express.json())
 
-var corsOptions = {
-    origin: 'http://localhost:8081',
-}
+// var corsOptions = {
+//     origin: 'http://localhost:8081',
+// }
 app.use(morgan('combined')) // theo dõi log GET, POST
 
-app.use(cors(corsOptions)) // cross origin domain
+app.use(cors()) // cross origin domain
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
