@@ -13,7 +13,7 @@ router.get('/verify', verifyToken, async (req, res) => {
     const user = await User.findById(req.userId).select('-password')
     if (!user)
       return res
-        .status(400)
+        .status(200)
         .json({ success: false, message: 'User not found!' })
     res.json({ success: true, user: user })
   } catch (error) {
@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
   const { username, password } = req.body
   // Simple validation
   if (!username || !password) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Missing username and/or password',
     })
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
     })
 
     if (user) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Username has already existed!',
       })
@@ -91,7 +91,7 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body
   // Simple validation
   if (!username || !password) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Missing username and/or password',
     })
@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
       username,
     })
     if (!user) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Incorrect username or password',
       })
@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
     // if username exist check password
     const passwordValid = await argon2.verify(user.password, password)
     if (!passwordValid) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Incorrect username or password',
       })
