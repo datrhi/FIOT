@@ -28,7 +28,7 @@ router.get('/verify', verifyToken, async (req, res) => {
  * @access Public
  */
 router.post('/register', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password } = JSON.parse(req.body)
   // Simple validation
   if (!username || !password) {
     return res.status(400).json({
@@ -88,7 +88,7 @@ router.post('/register', async (req, res) => {
  * @access Public
  */
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body
+  const { username, password } = JSON.parse(req.body)
 
   // Simple validation
   if (!username || !password) {
