@@ -8,7 +8,10 @@ const DB_MONGO = require('./app/config/db.config')
 const authRouter = require('./app/routes/auth')
 const app = express()
 app.use(express.json())
-
+app.use(function (req, res, next) {
+  req.header('Content-Type', 'application/json')
+  next()
+})
 // var corsOptions = {
 //     origin: 'http://localhost:8081',
 // }
@@ -23,16 +26,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const connect = async () => {
-    try {
-        await mongoose.connect(DB_MONGO.url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
-        console.log('Connected DB!')
-    } catch (error) {
-        console.log(error.message)
-        process.exit(1)
-    }
+  try {
+    await mongoose.connect(DB_MONGO.url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    console.log('Connected DB!')
+  } catch (error) {
+    console.log(error.message)
+    process.exit(1)
+  }
 }
 
 connect() //Connect to Mongodb
@@ -42,5 +45,5 @@ app.use('/api/auth', authRouter)
 
 const PORT = process.env.PORT || _CONST.PORT
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`)
+  console.log(`Server is running on port ${PORT}.`)
 })
