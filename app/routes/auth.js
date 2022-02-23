@@ -29,7 +29,6 @@ router.get('/verify', verifyToken, async (req, res) => {
  */
 router.post('/register', async (req, res) => {
   const { username, password } = req.body
-  return res.send(req.body)
   // Simple validation
   if (!username || !password) {
     return res.status(400).json({

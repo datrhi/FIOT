@@ -8,10 +8,7 @@ const DB_MONGO = require('./app/config/db.config')
 const authRouter = require('./app/routes/auth')
 const app = express()
 app.use(express.json())
-app.use(function (req, res, next) {
-  req.header('Content-Type', 'application/json')
-  next()
-})
+
 // var corsOptions = {
 //     origin: 'http://localhost:8081',
 // }
