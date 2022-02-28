@@ -6,22 +6,35 @@ const verifyToken = require('../middleware/auth')
 const User = require('../models/User')
 
 /**
- * @route GET api/auth/verify
+ * @route GET api/auth/me
+ * @description Verify user save login
+ * @access Public
  */
-router.get('/verify', verifyToken, async (req, res) => {
+router.get('/me', verifyToken, async (req, res) => {
+  const { userId } = req
+
+  // Simple validation
+  if (!userId) {
+    return res.status(200).json({
+      success: false,
+      message: 'Can not found userId!',
+    })
+  }
+
   try {
     const user = await User.findById(req.userId).select('-password')
-    if (!user)
-      return res
-        .status(200)
-        .json({ success: false, message: 'User not found!' })
-    res.json({ success: true, user: user })
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+    return res.json({ success: true, user: user })
   } catch (error) {
     console.log(error)
     res.status(500).json({ success: false, message: 'Internal server error' })
   }
 })
-
 /**
  * @route POST api/auth/register
  * @description Register user
