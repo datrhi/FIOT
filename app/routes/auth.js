@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken')
 const argon2 = require('argon2')
 const verifyToken = require('../middleware/auth')
 const User = require('../models/User')
-
+const generator = require('generate-password')
+const sendEmail = require('../utils/sendEmail')
 /**
  * @route GET api/auth/me
  * @description Verify user save login
@@ -96,6 +97,67 @@ router.post('/register', async (req, res) => {
 })
 
 /**
+ * @route POST api/auth/change-password
+ * @description Change password of user
+ * @access Public
+ */
+router.post('/change-password', verifyToken, async (req, res) => {
+  const { userId } = req
+  const { currentPassword, newPassword } = req.body
+  // Simple validation
+  if (!currentPassword || !newPassword) {
+    return res.status(200).json({
+      success: false,
+      message: 'Missing field required!',
+    })
+  }
+  if (!userId) {
+    return res.status(200).json({
+      success: false,
+      message: 'Can not found userId!',
+    })
+  }
+
+  try {
+    // Check for existing user
+    const user = await User.findOne({
+      _id: userId,
+    })
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: 'Incorrect userId!',
+      })
+    }
+
+    // if username exist check password
+    const passwordValid = await argon2.verify(user.password, currentPassword)
+    if (!passwordValid) {
+      return res.status(200).json({
+        success: false,
+        message: 'Incorrect current password!',
+      })
+    }
+
+    //All good
+    const hashedPassword = await argon2.hash(newPassword)
+
+    await User.updateOne({ _id: userId }, { password: hashedPassword })
+    return res.json({
+      success: true,
+      message: 'Change password successfully!',
+      accessToken,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  }
+})
+
+/**
  * @route POST api/auth/login
  * @description Login user
  * @access Public
@@ -144,6 +206,58 @@ router.post('/login', async (req, res) => {
     return res.json({
       success: true,
       message: 'Login successfully!',
+      accessToken,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  }
+})
+
+/**
+ * @route POST api/auth/forgot-password
+ * @description Forgot passowrd
+ * @access Public
+ */
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body
+  // Simple validation
+  if (!email) {
+    return res.status(200).json({
+      success: false,
+      message: 'Missing email!',
+    })
+  }
+
+  try {
+    // Check for existing user
+    const user = await User.findOne({
+      email,
+    })
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: 'Email does not exist!',
+      })
+    }
+
+    //All good
+    const genPassword = (password = generator.generate({
+      length: 10,
+      numbers: true,
+    }))
+    await sendEmail(
+      user.username,
+      'Password reset',
+      `Your new password is ${genPassword}\nPlease change your password after login!\nThanks for using our service!`
+    )
+
+    return res.json({
+      success: true,
+      message: 'Email sent successfully!',
       accessToken,
     })
   } catch (error) {
