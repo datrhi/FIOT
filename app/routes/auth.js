@@ -249,6 +249,9 @@ router.post('/forgot-password', async (req, res) => {
       length: 10,
       numbers: true,
     }))
+    const hashedPassword = await argon2.hash(genPassword)
+
+    await User.updateOne({ username: email }, { password: hashedPassword })
     await sendEmail(
       user.username,
       'Password reset',
