@@ -11,7 +11,6 @@ const Record = require('../models/Record')
 router.get('/get-all-metric', verifyToken, async (req, res) => {
   const { userId } = req
   const { date } = req.body
-  const mapDate = date.split('/').map((item) => Number(item))
 
   // Simple validation
   if (!userId) {
@@ -26,6 +25,8 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       message: 'Can not found date!',
     })
   }
+  const mapDate = date.split('/').map((item) => Number(item))
+
   if (mapDate.length !== 3) {
     return res.status(200).json({
       success: false,
