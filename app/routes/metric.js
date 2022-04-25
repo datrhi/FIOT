@@ -19,7 +19,7 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       message: 'Can not found userId!',
     })
   }
-  if (!date) {
+  if (!date || typeof date !== 'string') {
     return res.status(200).json({
       success: false,
       message: 'Can not found date!',
@@ -112,7 +112,6 @@ router.post('/create-metric', verifyToken, async (req, res) => {
 router.get('/get-lastest', verifyToken, async (req, res) => {
   const { userId } = req
   const { date } = req.body
-  const mapDate = date.split('/').map((item) => Number(item))
 
   // Simple validation
   if (!userId) {
@@ -121,12 +120,14 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
       message: 'Can not found userId!',
     })
   }
-  if (!date) {
+  if (!date || typeof date !== 'string') {
     return res.status(200).json({
       success: false,
-      message: 'Can not found date!',
+      message: 'Can not found date or wrong date format!',
     })
   }
+  const mapDate = date.split('/').map((item) => Number(item))
+
   if (mapDate.length !== 3) {
     return res.status(200).json({
       success: false,
