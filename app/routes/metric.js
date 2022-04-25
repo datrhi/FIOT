@@ -144,11 +144,18 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .limit(1)
+      .select('-userId')
     if (!lastestRecord) {
       return res.status(200).json({
         success: true,
         message: null,
-        data: [],
+        data: [
+          {
+            temperature: -1,
+            spo2: -1,
+            heartBeat: -1,
+          },
+        ],
       })
     }
     return res.json({ success: true, message: null, data: lastestRecord })
