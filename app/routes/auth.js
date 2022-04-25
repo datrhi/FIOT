@@ -234,7 +234,7 @@ router.post('/forgot-password', async (req, res) => {
   try {
     // Check for existing user
     const user = await User.findOne({
-      email,
+      username: email,
     })
     if (!user) {
       return res.status(200).json({
