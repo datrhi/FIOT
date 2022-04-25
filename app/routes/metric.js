@@ -137,8 +137,8 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
     const lastestRecord = await Record.find({
       userId: userId,
       createdAt: {
-        $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0]),
-        $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0] + 1),
+        $gte: new Date(mapDate[2], mapDate[1], mapDate[0]),
+        $lte: new Date(mapDate[2], mapDate[1], mapDate[0] + 1),
       },
     })
       .sort({ createdAt: -1 })
