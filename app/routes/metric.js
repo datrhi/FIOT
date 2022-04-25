@@ -111,8 +111,7 @@ router.post('/create-metric', verifyToken, async (req, res) => {
  */
 router.get('/get-lastest', verifyToken, async (req, res) => {
   const { userId } = req
-  const { date } = req.body
-
+  const { date } = req.query
   // Simple validation
   if (!userId) {
     return res.status(200).json({
