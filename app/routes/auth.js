@@ -146,7 +146,6 @@ router.post('/change-password', verifyToken, async (req, res) => {
     return res.json({
       success: true,
       message: 'Change password successfully!',
-      accessToken,
     })
   } catch (error) {
     console.log(error)
