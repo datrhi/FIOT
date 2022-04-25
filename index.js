@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const _CONST = require('./app/config/constant')
 const DB_MONGO = require('./app/config/db.config')
 const authRouter = require('./app/routes/auth')
+const metricRouter = require('./app/routes/metric')
 const app = express()
 app.use(express.json())
 
@@ -38,6 +39,7 @@ const connect = async () => {
 connect() //Connect to Mongodb
 
 app.use('/api/auth', authRouter)
+app.use('/api/metric', metricRouter)
 // require('./app/routes/')(app)
 
 const PORT = process.env.PORT || _CONST.PORT
