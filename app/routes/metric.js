@@ -161,3 +161,4 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
  * @access Public
  */
 // Incoming
+module.exports = router
