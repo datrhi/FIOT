@@ -260,7 +260,6 @@ router.post('/forgot-password', async (req, res) => {
     return res.json({
       success: true,
       message: 'Email sent successfully!',
-      accessToken,
     })
   } catch (error) {
     console.log(error)
