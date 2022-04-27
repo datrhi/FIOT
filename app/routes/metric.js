@@ -5,12 +5,12 @@ const Record = require('../models/Record')
 
 /**
  * @route GET api/metric/get-all-metric
- * @description Get all metric
+ * @description Get all metric in day
  * @access Public
  */
 router.get('/get-all-metric', verifyToken, async (req, res) => {
   const { userId } = req
-  const { date } = req.body
+  const { date } = req.query
 
   // Simple validation
   if (!userId) {
@@ -34,21 +34,83 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
     })
   }
   try {
-    const listRecord = await Record.find({
-      userId: userId,
-      createdAt: {
-        $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0]),
-        $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0] + 1),
-      },
-    }).select('-userId')
-    if (!listRecord) {
-      return res.status(200).json({
-        success: true,
-        message: null,
-        data: [],
+    let data = []
+    let i = 0
+    while (i < 24) {
+      let newData = await Record.find({
+        userId: userId,
+        createdAt: {
+          $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], i),
+          $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], i + 1),
+        },
       })
+      let total = newData.reduce(
+        (prev, curr) => ({
+          temperature: prev.temperature + curr.data.temperature,
+          spo2: prev.spo2 + curr.data.spo2,
+          heartBeat: prev.heartBeat + curr.data.heartBeat,
+        }),
+        {
+          temperature: 0,
+          spo2: 0,
+          heartBeat: 0,
+        }
+      )
+      let avg = total
+      if (newData.length > 0) {
+        avg = {
+          temperature: Number((total.temperature / newData.length).toFixed(2)),
+          spo2: Number((total.temperature / newData.length).toFixed(2)),
+          heartBeat: Number((total.temperature / newData.length).toFixed(2)),
+        }
+      }
+      data.push(avg)
+      i = i + 1
     }
-    return res.json({ success: true, message: null, data: listRecord })
+    // const dataArray = initialArray.map(async (id) => {
+    //   const data = await Record.find({
+    //     userId: userId,
+    //     createdAt: {
+    //       $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], id),
+    //       $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], id + 1),
+    //     },
+    //   })
+    // let total = data.reduce(
+    //   (prev, curr) => ({
+    //     temperature: prev.temperature + curr.data.temperature,
+    //     spo2: prev.spo2 + curr.data.spo2,
+    //     heartBeat: prev.heartBeat + curr.data.heartBeat,
+    //   }),
+    //   {
+    //     temperature: 0,
+    //     spo2: 0,
+    //     heartBeat: 0,
+    //   }
+    // )
+    // if (data.length > 0) {
+    //   total = {
+    //     temperature: total.temperature / data.length,
+    //     spo2: total.spo2 / data.length,
+    //     heartBeat: total.heartBeat / data.length,
+    //   }
+    // }
+    //   return data
+    // })
+    // const  = await Record.find({
+    //   userId: userId,
+    //   createdAt: {
+    //     $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0],0),
+    //     $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0],1),
+    //   },
+    // })
+    // if (!listRecord) {
+    //   return res.status(200).json({
+    //     success: true,
+    //     message: null,
+    //     data: [],
+    //   })
+    // }
+    return res.json({ success: true, message: null, data: data })
   } catch (error) {
     console.log(error)
     res.status(500).json({ success: false, message: 'Internal server error' })
