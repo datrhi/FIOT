@@ -40,8 +40,8 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       let newData = await Record.find({
         userId: userId,
         createdAt: {
-          $gte: new Date(mapDate[2], mapDate[1], mapDate[0], i),
-          $lte: new Date(mapDate[2], mapDate[1], mapDate[0], i + 1),
+          $gte: new Date(mapDate[2], mapDate[1], mapDate[0], i - 7),
+          $lte: new Date(mapDate[2], mapDate[1], mapDate[0], i + 1 - 7),
         },
       })
       let total = newData.reduce(
@@ -199,8 +199,8 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
     const lastestRecord = await Record.find({
       userId: userId,
       createdAt: {
-        $gte: new Date(mapDate[2], mapDate[1], mapDate[0]),
-        $lte: new Date(mapDate[2], mapDate[1], mapDate[0] + 1),
+        $gte: new Date(mapDate[2], mapDate[1], mapDate[0], -7),
+        $lte: new Date(mapDate[2], mapDate[1], mapDate[0] + 1, -7),
       },
     })
       .sort({ createdAt: -1 })
