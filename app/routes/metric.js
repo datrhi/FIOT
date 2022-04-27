@@ -60,8 +60,8 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       if (newData.length > 0) {
         avg = {
           temperature: Number((total.temperature / newData.length).toFixed(2)),
-          spo2: Number((total.temperature / newData.length).toFixed(2)),
-          heartBeat: Number((total.temperature / newData.length).toFixed(2)),
+          spo2: Number((total.spo2 / newData.length).toFixed(2)),
+          heartBeat: Number((total.heartBeat / newData.length).toFixed(2)),
         }
       }
       data.push(avg)
