@@ -148,16 +148,18 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
       return res.status(200).json({
         success: true,
         message: null,
-        data: [
-          {
-            temperature: -1,
-            spo2: -1,
-            heartBeat: -1,
-          },
-        ],
+        data: {
+          temperature: -1,
+          spo2: -1,
+          heartBeat: -1,
+        },
       })
     }
-    return res.json({ success: true, message: null, data: lastestRecord[0].data })
+    return res.json({
+      success: true,
+      message: null,
+      data: lastestRecord[0].data,
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({ success: false, message: 'Internal server error' })
