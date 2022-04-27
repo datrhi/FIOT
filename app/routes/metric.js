@@ -40,8 +40,8 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       let newData = await Record.find({
         userId: userId,
         createdAt: {
-          $gte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], i),
-          $lte: new Date(mapDate[2], mapDate[1] - 1, mapDate[0], i + 1),
+          $gte: new Date(mapDate[2], mapDate[1], mapDate[0], i),
+          $lte: new Date(mapDate[2], mapDate[1], mapDate[0], i + 1),
         },
       })
       let total = newData.reduce(
