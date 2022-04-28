@@ -93,7 +93,7 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
       if (data.length > 0) {
         total = {
           temperature: Number((total.temperature / data.length).toFixed(2)),
-          spo2: Number((total.spo2 / data.length).toFixed(2).toFixed(2)),
+          spo2: Number((total.spo2 / data.length).toFixed(2)),
           heartBeat: Number((total.heartBeat / data.length).toFixed(2)),
         }
       }
