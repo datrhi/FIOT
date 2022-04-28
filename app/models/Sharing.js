@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const SharingSchema = new Schema({
   me: String,
-  listFriend: [String],
+  listFriend: Array,
 })
 
 module.exports = mongoose.model('sharing', SharingSchema)
