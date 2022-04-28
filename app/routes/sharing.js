@@ -120,10 +120,18 @@ router.get('/get-list-friend', verifyToken, async (req, res) => {
   try {
     const sharing = await Sharing.find({ listFriend: userId })
     if (sharing.length > 0) {
+      const data = sharing.map(async (item) => {
+        const user = await User.findOne({ _id: item.me })
+        return {
+          username: user.username,
+          userId: user._id,
+        }
+      })
+      const listFriend = await Promise.all(data)
       return res.status(200).json({
         success: true,
         message: null,
-        data: sharing.map((item) => item.me),
+        data: listFriend,
       })
     }
     return res.status(200).json({
