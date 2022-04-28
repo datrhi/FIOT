@@ -69,40 +69,6 @@ router.post('/add-sharing', verifyToken, async (req, res) => {
   }
 })
 
-// /**
-//  * @route GET api/sharing/get-list-friend
-//  * @description Get list friend
-//  * @access Public
-//  */
-// router.get('/get-list-friend', async (req, res) => {
-//   const { userId } = req
-//   // Simple validation
-//   if (!userId) {
-//     return res.status(200).json({
-//       success: false,
-//       message: 'Can not found userId!',
-//     })
-//   }
-//   try {
-//     const sharing = await Sharing.findOne({ me: userId })
-//     if (sharing) {
-//       return res.status(200).json({
-//         success: true,
-//         message: null,
-//         data: sharing.listFriend,
-//       })
-//     }
-//     return res.status(200).json({
-//       success: true,
-//       message: null,
-//       data: [],
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).json({ success: false, message: 'Internal server error' })
-//   }
-// })
-
 /**
  * @route GET api/sharing/get-list-friend
  * @description Get list friend
