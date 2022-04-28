@@ -34,39 +34,6 @@ router.get('/get-all-metric', verifyToken, async (req, res) => {
     })
   }
   try {
-    // let data = []
-    // let i = 0
-    // while (i < 24) {
-    //   let newData = await Record.find({
-    //     userId: userId,
-    //     createdAt: {
-    //       $gte: new Date(mapDate[2], mapDate[1], mapDate[0], i - 7),
-    //       $lte: new Date(mapDate[2], mapDate[1], mapDate[0], i + 1 - 7),
-    //     },
-    //   })
-    //   let total = newData.reduce(
-    //     (prev, curr) => ({
-    //       temperature: prev.temperature + curr.data.temperature,
-    //       spo2: prev.spo2 + curr.data.spo2,
-    //       heartBeat: prev.heartBeat + curr.data.heartBeat,
-    //     }),
-    //     {
-    //       temperature: 0,
-    //       spo2: 0,
-    //       heartBeat: 0,
-    //     }
-    //   )
-    //   let avg = total
-    //   if (newData.length > 0) {
-    //     avg = {
-    //       temperature: Number((total.temperature / newData.length).toFixed(2)),
-    //       spo2: Number((total.spo2 / newData.length).toFixed(2)),
-    //       heartBeat: Number((total.heartBeat / newData.length).toFixed(2)),
-    //     }
-    //   }
-    //   data.push(avg)
-    //   i = i + 1
-    // }
     const initialArray = Array(24)
       .fill()
       .map((_, index) => index)
