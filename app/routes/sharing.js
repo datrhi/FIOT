@@ -5,7 +5,6 @@ const Sharing = require('../models/Sharing')
 const User = require('../models/User')
 const Record = require('../models/Record')
 
-
 /**
  * @route POST api/sharing/add-sharing
  * @description Add sharing
@@ -44,6 +43,7 @@ router.post('/add-sharing', verifyToken, async (req, res) => {
     const sharingExist = await Sharing.findOne({
       me: userId,
     })
+    console.log(sharingExist)
     if (!sharingExist) {
       const newSharing = await Sharing({ me: userId, listFriend: [friendId] })
       await newSharing.save()
@@ -55,9 +55,10 @@ router.post('/add-sharing', verifyToken, async (req, res) => {
           message: 'You already shared data with this email',
         })
       } else {
+        console.log([...oldListFriend, friendId])
         await Sharing.updateOne(
           { me: userId },
-          { listFiend: [...oldListFriend, friendId] }
+          { listFriend: [...oldListFriend, friendId] }
         )
       }
     }
