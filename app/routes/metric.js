@@ -124,6 +124,60 @@ router.post('/create-metric', verifyToken, async (req, res) => {
 })
 
 /**
+ * @route POST api/metric/save-metric
+ * @description Create list metric
+ * @access Public
+ */
+router.post('/save-metric', verifyToken, async (req, res) => {
+  const { userId } = req
+  const { listData } = req.body
+  // Simple validation
+  if (!userId) {
+    return res.status(200).json({
+      success: false,
+      message: 'Can not found userId!',
+    })
+  }
+  if (!listData || listData.length === 0) {
+    return res.status(200).json({
+      success: false,
+      message: 'Can not found data or wrong format data!',
+    })
+  }
+  try {
+    // All good
+
+    await Promise.all(
+      listData.map(async (data) => {
+        const newRecord = new Record({
+          data: {
+            temperature: data.temperature,
+            spo2: data.spo2,
+            heartBeat: data.heartBeat,
+          },
+          userId: userId,
+          createdAt: new Date(data.year, data.month, data.day, data.hours - 7),
+        })
+        // console.log(data)
+        await newRecord.save()
+        return data
+      })
+    )
+
+    return res.json({
+      success: true,
+      message: null,
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  }
+})
+
+/**
  * @route GET api/metric/get-lastest
  * @description Get lastest metric in range time
  * @access Public
