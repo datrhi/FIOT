@@ -228,10 +228,12 @@ router.get('/get-lastest', verifyToken, async (req, res) => {
         },
       })
     }
+    console.log(lastestRecord[0])
     return res.json({
       success: true,
       message: null,
       data: lastestRecord[0].data,
+      createdAt: lastestRecord[0].createdAt,
     })
   } catch (error) {
     console.log(error)
